@@ -155,6 +155,16 @@ h1{font-weight:500}
 @media(prefers-reduced-motion:reduce){.js .rv,.js .ch{opacity:1!important;animation:none!important}.lq,.lq::before,.lq::after{animation:none!important;transition:none!important}}
 .st b{font-size:clamp(2.5rem,4.6vw,3.6rem);font-weight:600}.st span{font-size:1.05rem}.st div{padding-left:28px}@media(max-width:600px){.st div{padding-left:14px}.st b{font-size:2.3rem}.st span{font-size:.85rem}}
 h1{word-spacing:.22em}
+
+/* ===== Lenis smooth scrolling: fluid, high-refresh-rate-style feel ===== */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  html.lenis, html.lenis body { scroll-behavior: auto !important; }
+}
+
 </style><script>document.documentElement.classList.add("js")</script></head><body>
 <canvas id="fx" aria-hidden="true"></canvas><div class="gl l" aria-hidden="true"></div><div class="gl r" aria-hidden="true"></div>
 <nav><div class="w"><a class="logo" href="#top">ALBIN<i>.</i></a><div class="nl"><a href="#top">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#exp">Experience</a><a href="#works">Works</a><a href="#contact">Contact</a></div><a class="pill" href="#contact">Let’s Talk ↗</a></div></nav>
@@ -210,4 +220,29 @@ function go(){if(!on){on=true;lt=0;requestAnimationFrame(loop)}}
 addEventListener("scroll",()=>{if(!on)tgt=cur=scrollY},{passive:true});
 addEventListener("wheel",e=>{if(e.ctrlKey||md.classList.contains("on"))return;let d=e.deltaY;if(e.deltaMode===1)d*=34;else if(e.deltaMode===2)d*=innerHeight;else if(Math.abs(d)<40)return;e.preventDefault();if(!on)tgt=cur=scrollY;tgt=Math.max(0,Math.min(mx(),tgt+d));go()},{passive:false});
 document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute("href").slice(1),el=id==="top"||!id?null:document.getElementById(id);if(id&&id!=="top"&&!el)return;e.preventDefault();if(!on)cur=scrollY;tgt=el?el.getBoundingClientRect().top+scrollY-(parseFloat(getComputedStyle(de).scrollPaddingTop)||0):0;go()})})();</script>
+
+<!-- Lenis: smoother, more fluid scrolling (actual FPS still depends on device/display) -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js"></script>
+<script>
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (typeof Lenis === 'undefined') return;
+
+  const lenis = new Lenis({
+    duration: 1.15,
+    smoothWheel: true,
+    wheelMultiplier: 0.9,
+    touchMultiplier: 1.15,
+    anchors: true
+  });
+
+  window.lenis = lenis;
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+})();
+</script>
+
 </body></html>
